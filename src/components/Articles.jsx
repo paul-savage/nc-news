@@ -54,7 +54,7 @@ const Articles = () => {
                     />
                   </div>
                   <h3>
-                    <strong>Name: </strong> {item.title}
+                    <strong>Title: </strong> {item.title}
                   </h3>
                   <h4>
                     <strong>Topic: </strong> {item.topic}
