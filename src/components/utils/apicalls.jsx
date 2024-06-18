@@ -25,3 +25,14 @@ export const getArticles = () => {
       console.log("Error fetching articles....", err);
     });
 };
+
+export const getArticleById = (article_id) => {
+  return ncNews
+    .get(`/articles/${article_id}`)
+    .then((response) => {
+      return response.data.article;
+    })
+    .catch((err) => {
+      console.log("Error fetching articles....", err);
+    });
+};
