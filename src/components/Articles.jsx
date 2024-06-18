@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { getArticles } from "./utils/apicalls";
+import { getArticles } from "../utils/apicalls";
 import { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
-import "../App.css";
 
 const Articles = () => {
   const navigate = useNavigate();
@@ -17,11 +16,11 @@ const Articles = () => {
     getArticles()
       .then((res) => {
         setItems(res);
+        setIsloading(false);
       })
       .catch((err) => {
         console.log("Error fetching articles -------->>>>>>", err);
       });
-    setIsloading(false);
   }, []);
 
   const handleClick = (event) => {
@@ -67,7 +66,6 @@ const Articles = () => {
                       Read
                     </button>
                   </div>
-                  <p></p>
                 </div>
               </div>
             );
