@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
-import { getArticleById } from "./utils/apicalls";
-import "../App.css";
+import { getArticleById, getCommentsByArticleId } from "../utils/apicalls";
+import Comments from "./Comments";
 
 const SingleArticle = () => {
   const { user, setUser } = useContext(UserContext);
@@ -11,27 +11,48 @@ const SingleArticle = () => {
   const { article_id } = useParams();
 
   const [article, setArticle] = useState({});
+  const [comments, setComments] = useState([]);
   const [isLoading, setIsloading] = useState(true);
+  const [showComments, setShowComments] = useState(false);
 
   useEffect(() => {
-    getArticleById(article_id)
+    const articleAndComments = [
+      getArticleById(article_id),
+      getCommentsByArticleId(article_id),
+    ];
+    Promise.all(articleAndComments)
       .then((res) => {
-        let timeStr = res.created_at;
-        let index = timeStr.indexOf("T");
-        if (index !== -1) {
-          timeStr = timeStr.slice(0, index) + " " + timeStr.slice(index + 1);
-          res.created_at = timeStr;
-          index = timeStr.indexOf(".");
-          timeStr = timeStr.slice(0, index);
-          res.created_at = timeStr;
-        }
-        setArticle(res);
+        let theArticle = res[0];
+        theArticle.created_at = reformatTime(theArticle.created_at);
+        setArticle(theArticle);
+        setComments(
+          res[1].map((comment) => {
+            comment.created_at = reformatTime(comment.created_at);
+            return comment;
+          })
+        );
+        setIsloading(false);
       })
       .catch((err) => {
         console.log("Error fetching article by ID -------->>>>>>", err);
       });
-    setIsloading(false);
   }, []);
+
+  const reformatTime = (str) => {
+    let index = str.indexOf("T");
+    if (index !== -1) {
+      str = str.slice(0, index) + " " + str.slice(index + 1);
+      index = str.indexOf(".");
+      str = str.slice(0, index);
+    }
+    return str;
+  };
+
+  const handleToggleComments = (event) => {
+    setShowComments((currentStatus) => {
+      return !currentStatus;
+    });
+  };
 
   if (isLoading) {
     return <p>Loading...</p>;
@@ -64,6 +85,18 @@ const SingleArticle = () => {
           <h4>
             <strong>Created: </strong> {article.created_at}
           </h4>
+        </div>
+        <div>
+          {showComments ? (
+            <div>
+              <div>
+                <button onClick={handleToggleComments}>Hide Comments</button>
+              </div>
+              <Comments comments={comments} />
+            </div>
+          ) : (
+            <button onClick={handleToggleComments}>Show Comments</button>
+          )}
         </div>
       </div>
     </>

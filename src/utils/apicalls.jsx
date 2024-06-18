@@ -36,3 +36,14 @@ export const getArticleById = (article_id) => {
       console.log("Error fetching articles....", err);
     });
 };
+
+export const getCommentsByArticleId = (article_id) => {
+  return ncNews
+    .get(`/articles/${article_id}/comments`)
+    .then((response) => {
+      return response.data.comments;
+    })
+    .catch((err) => {
+      console.log("Error fetching comments....", err);
+    });
+};

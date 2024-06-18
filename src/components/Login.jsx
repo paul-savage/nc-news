@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getUsers } from "./utils/apicalls";
+import { getUsers } from "../utils/apicalls";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
