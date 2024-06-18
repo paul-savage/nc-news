@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
-import { getArticleById, getCommentsByArticleId } from "../utils/apicalls";
+import {
+  getArticleById,
+  getCommentsByArticleId,
+  patchArticleById,
+} from "../utils/apicalls";
 import Comments from "./Comments";
 
 const SingleArticle = () => {
@@ -14,6 +18,7 @@ const SingleArticle = () => {
   const [comments, setComments] = useState([]);
   const [isLoading, setIsloading] = useState(true);
   const [showComments, setShowComments] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   useEffect(() => {
     const articleAndComments = [
@@ -54,6 +59,44 @@ const SingleArticle = () => {
     });
   };
 
+  const handleUpVote = (event) => {
+    setArticle((currentArticle) => {
+      return { ...currentArticle, votes: currentArticle.votes + 1 };
+    });
+    patchArticleById(article.article_id, { inc_votes: 1 })
+      .then((res) => {
+        setIsError(false);
+        setArticle((currentArticle) => {
+          return { ...currentArticle, votes: res.votes };
+        });
+      })
+      .catch((err) => {
+        setArticle((currentArticle) => {
+          return { ...currentArticle, votes: currentArticle.votes - 1 };
+        });
+        setIsError(true);
+      });
+  };
+
+  const handleDownVote = (event) => {
+    setArticle((currentArticle) => {
+      return { ...currentArticle, votes: currentArticle.votes - 1 };
+    });
+    patchArticleById(article.article_id, { inc_votes: -1 })
+      .then((res) => {
+        setIsError(false);
+        setArticle((currentArticle) => {
+          return { ...currentArticle, votes: res.votes };
+        });
+      })
+      .catch((err) => {
+        setArticle((currentArticle) => {
+          return { ...currentArticle, votes: currentArticle.votes + 1 };
+        });
+        setIsError(true);
+      });
+  };
+
   if (isLoading) {
     return <p>Loading...</p>;
   }
@@ -86,6 +129,12 @@ const SingleArticle = () => {
             <strong>Created: </strong> {article.created_at}
           </h4>
         </div>
+        <div className="votes">
+          <button onClick={handleUpVote}>Vote Up</button>
+          <span>Votes: {article.votes}</span>
+          <button onClick={handleDownVote}>Vote Down</button>
+        </div>
+        {isError ? <p className="voting-error">Error updating votes</p> : null}
         <div>
           {showComments ? (
             <div>

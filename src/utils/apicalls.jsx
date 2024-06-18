@@ -47,3 +47,9 @@ export const getCommentsByArticleId = (article_id) => {
       console.log("Error fetching comments....", err);
     });
 };
+
+export const patchArticleById = (article_id, data) => {
+  return ncNews.patch(`/articles/${article_id}`, data).then((res) => {
+    return res.data.article;
+  });
+};
