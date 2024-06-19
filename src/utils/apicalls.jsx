@@ -53,3 +53,9 @@ export const patchArticleById = (article_id, data) => {
     return res.data.article;
   });
 };
+
+export const postCommentByArticleId = (article_id, data) => {
+  return ncNews.post(`/articles/${article_id}/comments`, data).then((res) => {
+    return res.data.comment;
+  });
+};
