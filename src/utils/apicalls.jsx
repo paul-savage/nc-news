@@ -63,3 +63,15 @@ export const postCommentByArticleId = (article_id, data) => {
 export const deleteCommentById = (comment_id) => {
   return ncNews.delete(`/comments/${comment_id}`).then((res) => {});
 };
+
+export const getTopics = () => {
+  return ncNews.get("/topics").then((response) => {
+    return response.data.topics;
+  });
+};
+
+export const getTopicArticles = (queries) => {
+  return ncNews.get("/articles", { params: queries }).then((res) => {
+    return res.data.articles;
+  });
+};

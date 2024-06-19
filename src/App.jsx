@@ -7,6 +7,7 @@ import Home from "./components/Home";
 import Articles from "./components/Articles";
 import SingleArticle from "./components/SingleArticle";
 import Topics from "./components/Topics";
+import TopicArticles from "./components/TopicArticles";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/articles" element={<Articles />} />
         <Route path="/articles/:article_id" element={<SingleArticle />} />
         <Route path="/topics" element={<Topics />} />
+        <Route path="/topics/:slug" element={<TopicArticles />} />
       </Routes>
     </>
   );
