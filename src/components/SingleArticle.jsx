@@ -141,7 +141,11 @@ const SingleArticle = () => {
               <div>
                 <button onClick={handleToggleComments}>Hide Comments</button>
               </div>
-              <Comments comments={comments} />
+              <Comments
+                article_id={article_id}
+                comments={comments}
+                setComments={setComments}
+              />
             </div>
           ) : (
             <button onClick={handleToggleComments}>Show Comments</button>
