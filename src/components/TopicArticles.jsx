@@ -1,26 +1,29 @@
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { useNavigate, Link } from "react-router-dom";
-import { getArticles } from "../utils/apicalls";
+import { getTopicArticles } from "../utils/apicalls";
 import { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
 import ListArticles from "./ListArticles";
 
-const Articles = () => {
+const TopicArticles = () => {
   const navigate = useNavigate();
 
   const { user, setUser } = useContext(UserContext);
+
+  const { slug } = useParams();
 
   const [isLoading, setIsloading] = useState(true);
   const [items, setItems] = useState([]);
 
   useEffect(() => {
-    getArticles()
+    getTopicArticles({ topic: slug })
       .then((res) => {
         setItems(res);
         setIsloading(false);
       })
       .catch((err) => {
-        console.log("Error fetching articles -------->>>>>>", err);
+        console.log("Error fetching topic articles -------->>>>>>", err);
       });
   }, []);
 
@@ -31,4 +34,4 @@ const Articles = () => {
   return <ListArticles items={items} />;
 };
 
-export default Articles;
+export default TopicArticles;

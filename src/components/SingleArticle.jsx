@@ -106,7 +106,7 @@ const SingleArticle = () => {
       <h1>Single Article: {article_id}</h1>
       <Link to="/home">Home</Link>
 
-      <div className="articleItem">
+      <div className="article-item">
         <div>
           <div>
             <img
