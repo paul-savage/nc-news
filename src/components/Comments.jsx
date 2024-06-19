@@ -1,16 +1,32 @@
 import { useState } from "react";
 import { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
-import { postCommentByArticleId } from "../utils/apicalls";
+import { postCommentByArticleId, deleteCommentById } from "../utils/apicalls";
 
 const Comments = ({ article_id, comments, setComments }) => {
   const { user, setUser } = useContext(UserContext);
 
   const [posting, setPosting] = useState("");
   const [postDisabled, setPostDisabled] = useState(false);
+  const [deleteDisabled, setDeleteDisabled] = useState(false);
 
   const handleDescriptionChange = (event) => {
     setPosting(event.target.value);
+  };
+
+  const handleDeleteComment = (event, comment_id) => {
+    setDeleteDisabled(true);
+    deleteCommentById(comment_id)
+      .then(() => {
+        setComments(
+          comments.filter((comment) => comment.comment_id !== comment_id)
+        );
+        setDeleteDisabled(false);
+      })
+      .catch((err) => {
+        setDeleteDisabled(false);
+        console.log("Error deleting comment...", err);
+      });
   };
 
   const handleSubmit = (event) => {
@@ -50,6 +66,17 @@ const Comments = ({ article_id, comments, setComments }) => {
                   <strong>Created: </strong>
                   {comment.created_at}
                 </h4>
+                <div>
+                  {comment.author === user ? (
+                    <button
+                      onClick={(event) =>
+                        handleDeleteComment(event, comment.comment_id)
+                      }
+                    >
+                      Delete
+                    </button>
+                  ) : null}
+                </div>
               </div>
             );
           })}
