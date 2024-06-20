@@ -24,7 +24,8 @@ const Topics = () => {
   }, []);
 
   const handleClick = (event, slug) => {
-    navigate(`/topics/${slug}`);
+    //navigate(`/topics/${slug}`);
+    navigate(`/articles?topic=${slug}`);
   };
 
   if (isLoading) {
