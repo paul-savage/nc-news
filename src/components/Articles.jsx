@@ -5,6 +5,7 @@ import { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
 import { useSearchParams } from "react-router-dom";
 import ListArticles from "./ListArticles";
+import Error from "./Error";
 
 const Articles = () => {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ const Articles = () => {
 
   const [isLoading, setIsloading] = useState(true);
   const [items, setItems] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const topic = searchParams.get("topic");
@@ -36,9 +38,13 @@ const Articles = () => {
         setIsloading(false);
       })
       .catch((err) => {
-        console.log("Error fetching articles -------->>>>>>", err);
+        setError("Error fetching articles");
       });
   }, [searchParams]);
+
+  if (error) {
+    return <Error message={error} />;
+  }
 
   if (isLoading) {
     return <p>Loading...</p>;

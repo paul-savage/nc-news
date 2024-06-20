@@ -8,6 +8,7 @@ import {
   patchArticleById,
 } from "../utils/apicalls";
 import Comments from "./Comments";
+import Error from "./Error";
 
 const SingleArticle = () => {
   const { user, setUser } = useContext(UserContext);
@@ -19,6 +20,7 @@ const SingleArticle = () => {
   const [isLoading, setIsloading] = useState(true);
   const [showComments, setShowComments] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const articleAndComments = [
@@ -39,7 +41,7 @@ const SingleArticle = () => {
         setIsloading(false);
       })
       .catch((err) => {
-        console.log("Error fetching article by ID -------->>>>>>", err);
+        setError(`Error fetching article ${article_id}`);
       });
   }, []);
 
@@ -75,6 +77,7 @@ const SingleArticle = () => {
           return { ...currentArticle, votes: currentArticle.votes - 1 };
         });
         setIsError(true);
+        setError("Error patching article by ID");
       });
   };
 
@@ -94,8 +97,13 @@ const SingleArticle = () => {
           return { ...currentArticle, votes: currentArticle.votes + 1 };
         });
         setIsError(true);
+        setError("Error patching article by ID");
       });
   };
+
+  if (error) {
+    return <Error message={error} />;
+  }
 
   if (isLoading) {
     return <p>Loading...</p>;

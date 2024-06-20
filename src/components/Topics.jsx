@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { getTopics } from "../utils/apicalls";
 import { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
+import Error from "./Error";
 
 const Topics = () => {
   const navigate = useNavigate();
@@ -11,6 +12,7 @@ const Topics = () => {
 
   const [isLoading, setIsloading] = useState(true);
   const [items, setItems] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     getTopics()
@@ -19,14 +21,17 @@ const Topics = () => {
         setIsloading(false);
       })
       .catch((err) => {
-        console.log("Error fetching topics -------->>>>>>", err);
+        setError("Error fetching topics");
       });
   }, []);
 
   const handleClick = (event, slug) => {
-    //navigate(`/topics/${slug}`);
     navigate(`/articles?topic=${slug}`);
   };
+
+  if (error) {
+    return <Error message={error} />;
+  }
 
   if (isLoading) {
     return <p>Loading...</p>;

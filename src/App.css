@@ -5,6 +5,16 @@
   text-align: center;
 }
 
+#error-message {
+  font-size: 2em;
+  border: 1px solid black;
+  padding: 0.5em;
+  border-radius: 10px;
+  margin: 0.5em;
+  background-color: red;
+  color: white;
+}
+
 .article-item {
   border: 1px solid black;
   padding: 1em;
