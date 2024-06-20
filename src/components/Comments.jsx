@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
 import { postCommentByArticleId, deleteCommentById } from "../utils/apicalls";
+import Error from "./Error";
 
 const Comments = ({ article_id, comments, setComments }) => {
   const { user, setUser } = useContext(UserContext);
@@ -9,6 +10,7 @@ const Comments = ({ article_id, comments, setComments }) => {
   const [posting, setPosting] = useState("");
   const [postDisabled, setPostDisabled] = useState(false);
   const [deleteDisabled, setDeleteDisabled] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleDescriptionChange = (event) => {
     setPosting(event.target.value);
@@ -25,7 +27,7 @@ const Comments = ({ article_id, comments, setComments }) => {
       })
       .catch((err) => {
         setDeleteDisabled(false);
-        console.log("Error deleting comment...", err);
+        setError("Error deleting comment");
       });
   };
 
@@ -38,13 +40,18 @@ const Comments = ({ article_id, comments, setComments }) => {
         setComments((currentComments) => {
           return [...currentComments, res];
         });
+        setPosting("");
         setPostDisabled(false);
       })
       .catch((err) => {
         setPostDisabled(false);
-        console.log("Error posting comment...", err);
+        setError("Error posting comment");
       });
   };
+
+  if (error) {
+    return <Error message={error} />;
+  }
 
   return (
     <>

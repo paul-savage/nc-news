@@ -3,6 +3,7 @@ import { getUsers } from "../utils/apicalls";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
+import Error from "./Error";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ const Login = () => {
   const [loginName, setLoginName] = useState("");
   const [invalidUser, setInvalidUser] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     setUser("");
@@ -30,7 +32,7 @@ const Login = () => {
         setIsLoading(false);
       })
       .catch((err) => {
-        console.log("Error fetching users -------->>>>>>", err);
+        setError("Error fetching users");
       });
   }, []);
 
@@ -54,6 +56,10 @@ const Login = () => {
       setInvalidUser(true);
     }
   };
+
+  if (error) {
+    return <Error message={error} />;
+  }
 
   if (isLoading) {
     return <p>Loading...</p>;
