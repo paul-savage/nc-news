@@ -15,19 +15,23 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setUser('');
-    getUsers().then((data) => {
-      const userNames = data.map((user) => {
-        return user.username;
+    setUser("");
+    getUsers()
+      .then((data) => {
+        const userNames = data.map((user) => {
+          return user.username;
+        });
+        setUsers(userNames);
+        if (userNames.length) {
+          setLoginName(userNames[0]);
+        } else {
+          setLoginName("");
+        }
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log("Error fetching users -------->>>>>>", err);
       });
-      setUsers(userNames);
-      if (userNames.length) {
-        setLoginName(userNames[0]);
-      } else {
-        setLoginName("");
-      }
-      setIsLoading(false);
-    });
   }, []);
 
   const handleLoginNameChange = (event) => {

@@ -69,6 +69,7 @@ const Comments = ({ article_id, comments, setComments }) => {
                 <div>
                   {comment.author === user ? (
                     <button
+                      disabled={deleteDisabled}
                       onClick={(event) =>
                         handleDeleteComment(event, comment.comment_id)
                       }
