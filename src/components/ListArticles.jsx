@@ -164,35 +164,28 @@ const ListArticles = ({
 
       {pageData.maxPages && pageData.maxPages > 1 ? (
         <div className="article-sort-box mt-3 mx-auto px-2">
-          <CardGroup>
-            <Card>
-              <Card.Body>
-                <Card.Title>Page</Card.Title>
-              </Card.Body>
-            </Card>
-            <Card>
-              <Card.Body>
-                <Form onSubmit={(event) => event.preventDefault()}>
-                  <Form.Select onChange={handleSelectChange} value={pageData.pageNumber}>
-                    {Array.from(Array(pageData.maxPages).keys()).map(
-                      (pageNumber) => {
-                        return (
-                          <option key={pageNumber} value={pageNumber + 1}>
-                            {pageNumber + 1}
-                          </option>
-                        );
-                      }
-                    )}
-                  </Form.Select>
-                </Form>
-              </Card.Body>
-            </Card>
-            <Card>
-              <Card.Body>
-                <Card.Title>of {pageData.maxPages}</Card.Title>
-              </Card.Body>
-            </Card>
-          </CardGroup>
+          <Row>
+            <Col>Page</Col>
+            <Col>
+              <Form onSubmit={(event) => event.preventDefault()}>
+                <Form.Select
+                  onChange={handleSelectChange}
+                  value={pageData.pageNumber}
+                >
+                  {Array.from(Array(pageData.maxPages).keys()).map(
+                    (pageNumber) => {
+                      return (
+                        <option key={pageNumber} value={pageNumber + 1}>
+                          {pageNumber + 1}
+                        </option>
+                      );
+                    }
+                  )}
+                </Form.Select>
+              </Form>
+            </Col>
+            <Col>of {pageData.maxPages}</Col>
+          </Row>
         </div>
       ) : null}
 
