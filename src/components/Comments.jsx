@@ -3,6 +3,13 @@ import { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
 import { postCommentByArticleId, deleteCommentById } from "../utils/apicalls";
 import Error from "./Error";
+import { reformatTime } from "../utils/utils";
+
+import Card from "react-bootstrap/Card";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import ListGroup from "react-bootstrap/ListGroup";
+import Alert from "react-bootstrap/Alert";
 
 const Comments = ({ article_id, comments, setComments }) => {
   const { user, setUser } = useContext(UserContext);
@@ -56,62 +63,75 @@ const Comments = ({ article_id, comments, setComments }) => {
   return (
     <>
       {comments.length === 0 ? (
-        <p>No comments posted</p>
+        <Alert className="mt-3" variant={"danger"}>
+          No comments posted!
+        </Alert>
       ) : (
         <div>
           {comments.map((comment) => {
             return (
-              <div className="comment" key={comment.comment_id}>
-                <h3>
-                  <strong>Author: </strong> {comment.author}
-                </h3>
-                <p>
-                  <strong>Body: </strong>
-                  {comment.body}
-                </p>
-                <h4>
-                  <strong>Created: </strong>
-                  {comment.created_at}
-                </h4>
-                <div>
-                  {comment.author === user ? (
-                    <button
-                      disabled={deleteDisabled}
-                      onClick={(event) =>
-                        handleDeleteComment(event, comment.comment_id)
-                      }
-                    >
-                      Delete
-                    </button>
-                  ) : null}
-                </div>
-              </div>
+              <Card
+                bg={"light"}
+                border="info"
+                key={comment.comment_id}
+                className="mt-4"
+              >
+                <ListGroup variant="flush">
+                  <ListGroup.Item>
+                    <strong>Author:</strong> {comment.author}
+                  </ListGroup.Item>
+                  <ListGroup.Item>
+                    <strong>Created:</strong> {reformatTime(comment.created_at)}
+                  </ListGroup.Item>
+                </ListGroup>
+                <Card.Text className="p-4">{comment.body}</Card.Text>
+                {comment.author === user ? (
+                  <Button
+                    className="mx-5 mb-2"
+                    variant="danger"
+                    size="lg"
+                    disabled={deleteDisabled}
+                    onClick={(event) =>
+                      handleDeleteComment(event, comment.comment_id)
+                    }
+                  >
+                    Delete
+                  </Button>
+                ) : null}
+              </Card>
             );
           })}
         </div>
       )}
-      <form onSubmit={handleSubmit}>
-        <h2>Post new comment:</h2>
-        <label htmlFor="description">Enter your comment:</label>
-        <textarea
-          id="description"
-          multiline="true"
-          onChange={handleDescriptionChange}
-          value={posting}
-          required
-        ></textarea>
-        <div>
+      <Form className="mt-5" onSubmit={handleSubmit}>
+        <Form.Label htmlFor="post-text">
+          <strong>Post new comment:</strong>
+        </Form.Label>
+        <Form.Group>
+          <Form.Control
+            as="textarea"
+            placeholder="Enter new comment"
+            onChange={handleDescriptionChange}
+            value={posting}
+            required
+          />
+        </Form.Group>
+        <Form.Group className="mt-3">
+          <Button
+            size="lg"
+            variant="info"
+            type="submit"
+            disabled={postDisabled}
+          >
+            Post Comment
+          </Button>
           {postDisabled ? (
-            <div>
-              <button disabled>Post Comment</button>
-              <p>Posting comment...</p>
-            </div>
-          ) : (
-            <button>Post Comment</button>
-          )}
-        </div>
-      </form>
-      <div></div>
+            <Alert className="mt-3" variant={"info"}>
+              Posting comment...
+            </Alert>
+          ) : null}
+        </Form.Group>
+      </Form>
     </>
   );
 };

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
 import {
@@ -7,8 +7,18 @@ import {
   getCommentsByArticleId,
   patchArticleById,
 } from "../utils/apicalls";
+import { reformatTime } from "../utils/utils";
 import Comments from "./Comments";
 import Error from "./Error";
+
+import Card from "react-bootstrap/Card";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import ListGroup from "react-bootstrap/ListGroup";
+import CardGroup from "react-bootstrap/CardGroup";
+import Spinner from "react-bootstrap/Spinner";
 
 const SingleArticle = () => {
   const { user, setUser } = useContext(UserContext);
@@ -44,16 +54,6 @@ const SingleArticle = () => {
         setError(`Error fetching article ${article_id}`);
       });
   }, []);
-
-  const reformatTime = (str) => {
-    let index = str.indexOf("T");
-    if (index !== -1) {
-      str = str.slice(0, index) + " " + str.slice(index + 1);
-      index = str.indexOf(".");
-      str = str.slice(0, index);
-    }
-    return str;
-  };
 
   const handleToggleComments = (event) => {
     setShowComments((currentStatus) => {
@@ -106,49 +106,71 @@ const SingleArticle = () => {
   }
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return (
+      <>
+        <Spinner animation="border" variant="info" />
+      </>
+    );
   }
 
   return (
-    <>
-      <h1>Single Article: {article_id}</h1>
-      <Link to="/home">Home</Link>
+    <div className="px-2 mb-5">
+      <h1>{article.title}</h1>
 
-      <div className="article-item">
-        <div>
-          <div>
-            <img
-              style={{ width: "100%" }}
-              src={article.article_img_url}
-              alt={`Article avatar`}
-            />
-          </div>
-          <h3>
-            <strong>Title: </strong> {article.title}
-          </h3>
-          <h4>
-            <strong>Topic: </strong> {article.topic}
-          </h4>
-          <h4>
-            <strong>Author: </strong> {article.author}
-          </h4>
-          <p>{article.body}</p>
-          <h4>
-            <strong>Created: </strong> {article.created_at}
-          </h4>
-        </div>
-        <div className="votes">
-          <button onClick={handleUpVote}>Vote Up</button>
-          <span>Votes: {article.votes}</span>
-          <button onClick={handleDownVote}>Vote Down</button>
-        </div>
-        {isError ? <p className="voting-error">Error updating votes</p> : null}
-        <div>
+      <Card className="mt-3">
+        <Card.Img
+          variant="top"
+          src={article.article_img_url}
+          alt="article avatar"
+        />
+        <Card.Body>
+          <ListGroup variant="flush">
+            <ListGroup.Item>Topic: {article.topic}</ListGroup.Item>
+            <ListGroup.Item>Author: {article.author}</ListGroup.Item>
+            <ListGroup.Item>
+              Created: {reformatTime(article.created_at)}
+            </ListGroup.Item>
+            <ListGroup.Item></ListGroup.Item>
+          </ListGroup>
+          <Card.Text>{article.body}</Card.Text>
+        </Card.Body>
+        <Card.Body>
+          <CardGroup>
+            <Card bg={"light"}>
+              <Card.Body>
+                <Button variant="success" onClick={handleUpVote} size="lg">
+                  Vote Up
+                </Button>
+              </Card.Body>
+            </Card>
+            <Card bg={"light"}>
+              <Card.Body>
+                <Card.Text>
+                  <strong>
+                    Votes:
+                    <br /> {article.votes}
+                  </strong>
+                </Card.Text>
+              </Card.Body>
+            </Card>
+            <Card bg={"light"}>
+              <Card.Body>
+                <Button variant="danger" onClick={handleDownVote} size="lg">
+                  Vote Down
+                </Button>
+              </Card.Body>
+            </Card>
+          </CardGroup>
+        </Card.Body>
+        <Card.Body>
+          {isError ? (
+            <p className="voting-error">Error updating votes</p>
+          ) : null}
           {showComments ? (
             <div>
-              <div>
-                <button onClick={handleToggleComments}>Hide Comments</button>
-              </div>
+              <Button variant="info" onClick={handleToggleComments} size="lg">
+                Hide Comments
+              </Button>
               <Comments
                 article_id={article_id}
                 comments={comments}
@@ -156,11 +178,13 @@ const SingleArticle = () => {
               />
             </div>
           ) : (
-            <button onClick={handleToggleComments}>Show Comments</button>
+            <Button variant="info" onClick={handleToggleComments} size="lg">
+              Show Comments
+            </Button>
           )}
-        </div>
-      </div>
-    </>
+        </Card.Body>
+      </Card>
+    </div>
   );
 };
 

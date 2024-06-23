@@ -3,21 +3,23 @@ import { getUsers } from "../utils/apicalls";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
-import Error from "./Error";
+
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import Spinner from "react-bootstrap/Spinner";
 
 const Login = () => {
   const navigate = useNavigate();
 
   const [users, setUsers] = useState([]);
-  const { user, setUser } = useContext(UserContext);
+  const { setUser, setLoggedIn } = useContext(UserContext);
 
   const [loginName, setLoginName] = useState("");
-  const [invalidUser, setInvalidUser] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [isInvalidUser, setIsInvalidUser] = useState(false);
+  const [isFetchUsersError, setIsFetchUsersError] = useState(false);
 
   useEffect(() => {
-    setUser("");
     getUsers()
       .then((data) => {
         const userNames = data.map((user) => {
@@ -32,70 +34,88 @@ const Login = () => {
         setIsLoading(false);
       })
       .catch((err) => {
-        setError("Error fetching users");
+        setIsFetchUsersError(true);
       });
   }, []);
 
   const handleLoginNameChange = (event) => {
     setLoginName(event.target.value);
-    setInvalidUser(false);
+    setIsInvalidUser(false);
   };
 
   const handleSelectChange = (event) => {
     setLoginName(users[+event.target.value]);
-    setInvalidUser(false);
+    setIsInvalidUser(false);
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
     if (users.includes(loginName)) {
-      setInvalidUser(false);
+      setIsInvalidUser(false);
       setUser(loginName);
+      setLoggedIn(true);
       navigate("/home");
     } else {
-      setInvalidUser(true);
+      setIsInvalidUser(true);
     }
   };
 
-  if (error) {
-    return <Error message={error} />;
+  if (isFetchUsersError) {
+    return <p className="invalid-username">Error loading user names</p>;
   }
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return (
+      <>
+        <Spinner animation="border" variant="info" />
+      </>
+    );
   }
 
   return (
-    <div>
-      <form action="" onSubmit={handleSubmit}>
-        <h2>Log in with username:</h2>
-        {invalidUser ? <p>Username does not exist!</p> : null}
-        <label htmlFor="login">Enter your username:</label>
-        <input
-          id="login"
-          type="text"
-          onChange={handleLoginNameChange}
-          value={loginName}
-          required
-        />
-        <h2>OR select username from:</h2>
-        <div>
-          <select onChange={handleSelectChange}>
-            {users.map((user, index) => {
-              return (
-                <option key={user} value={index}>
-                  {user}
-                </option>
-              );
-            })}
-          </select>
-        </div>
-        <p></p>
-        <div>
-          <button>Log in</button>
-        </div>
-      </form>
-    </div>
+    <>
+      <div className="login-header mb-5">NC News</div>
+      <div className="login-form-wrapper">
+        <Form onSubmit={handleSubmit} className="px-2">
+          <Form.Group className="mb-3">
+            <Form.Label htmlFor="login-name">Login with user name</Form.Label>
+            <Form.Control
+              id="login-name"
+              placeholder="username"
+              onChange={handleLoginNameChange}
+              value={loginName}
+            />
+          </Form.Group>
+
+          {isInvalidUser ? (
+            <p className="invalid-username">User name does not exist</p>
+          ) : null}
+
+          <Form.Label>
+            <strong>OR</strong>
+          </Form.Label>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Select user name from</Form.Label>
+            <Form.Select onChange={handleSelectChange}>
+              {users.map((user, index) => {
+                return (
+                  <option key={user} value={index}>
+                    {user}
+                  </option>
+                );
+              })}
+            </Form.Select>
+          </Form.Group>
+
+          <Form.Group>
+            <Button variant="primary" type="submit">
+              Log in
+            </Button>
+          </Form.Group>
+        </Form>
+      </div>
+    </>
   );
 };
 

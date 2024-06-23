@@ -1,9 +1,15 @@
 import { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
 import { getTopics } from "../utils/apicalls";
 import { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+
 import Error from "./Error";
+import Spinner from "react-bootstrap/Spinner";
+import Alert from "react-bootstrap/Alert";
+import Button from "react-bootstrap/Button";
+import Card from "react-bootstrap/Card";
 
 const Topics = () => {
   const navigate = useNavigate();
@@ -25,41 +31,43 @@ const Topics = () => {
       });
   }, []);
 
-  const handleClick = (event, slug) => {
-    navigate(`/articles?topic=${slug}`);
-  };
-
   if (error) {
     return <Error message={error} />;
   }
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return (
+      <>
+        <Spinner animation="border" variant="info" />
+      </>
+    );
   }
 
   return (
     <>
-      <div>
-        <h1>Choose topic...</h1>
-        <Link to="/home">Home</Link>
+      <div className="nav-spacer">
+        <h1>Topics</h1>
       </div>
       {items.length === 0 ? (
-        <p>No topics available</p>
+        <Alert className="mt-3" variant={"danger"}>
+          No topics available
+        </Alert>
       ) : (
-        <div>
+        <div className="article-sort-box mx-auto px-2">
           {items.map((item) => {
             return (
-              <div key={item.slug} className="topic-item">
-                <div>
-                  <h2>{item.slug}</h2>
-                  <p>{item.description}</p>
-                  <div>
-                    <button onClick={(event) => handleClick(event, item.slug)}>
-                      Display Articles
-                    </button>
-                  </div>
-                </div>
-              </div>
+              <Card className="mt-3" key={item.slug}>
+                <Card.Body>
+                  <Card.Title>{item.slug}</Card.Title>
+                  <Card.Text>{item.description}</Card.Text>
+                  <Button
+                    variant="warning"
+                    onClick={() => navigate(`/articles?topic=${item.slug}`)}
+                  >
+                    Display Articles
+                  </Button>
+                </Card.Body>
+              </Card>
             );
           })}
         </div>

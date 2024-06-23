@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const ncNews = axios.create({
-  baseURL: "https://pauls-be-nc-news.onrender.com/api",
+  // baseURL: "https://pauls-be-nc-news.onrender.com/api",
+  baseURL: "https://be-nc-news-1s82.onrender.com/api",
 });
 
 export const getUsers = () => {

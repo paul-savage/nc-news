@@ -1,8 +1,66 @@
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0;
   text-align: center;
+}
+
+.login-header {
+  font-size: 3em;
+  font-weight: bold;
+  color: white;
+  background-color: blue;
+  margin: 0;
+}
+
+.login-form-wrapper {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.invalid-username {
+  color: red;
+}
+
+.nav-spacer {
+  margin-top: 5em;
+}
+
+.banner {
+  font-size: 3em;
+  font-weight: bold;
+  color: white;
+  background-color: blue;
+  margin: 0;
+  padding: 0;
+}
+
+.article-sort-box {
+  width: 100%;
+}
+
+@media screen and (min-width: 400px) {
+  .article-sort-box {
+    width: 80%;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .article-sort-box {
+    width: 50%;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .article-sort-box {
+    width: 40%;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .article-sort-box {
+    width: 30%;
+  }
 }
 
 #error-message {
@@ -15,14 +73,15 @@
   color: white;
 }
 
-.article-item {
+.comment {
   border: 1px solid black;
-  padding: 1em;
+  padding: 0.5em 1em;
   border-radius: 10px;
   margin-top: 10px;
+  background-color: rgb(229, 229, 229);
 }
 
-.comment {
+.no-comments {
   border: 1px solid black;
   padding: 0.5em 1em;
   border-radius: 10px;
@@ -39,18 +98,6 @@
   background-color: rgb(120, 251, 120);
 }
 
-.votes span {
-  display: inline-block;
-  width: 33%;
-  text-align: center;
-  margin: 0 auto;
-}
-
-.votes button {
-  width: 20%;
-  margin: 0 auto;
-}
-
 .voting-error {
   width: 50%;
   border: 1px solid black;
@@ -59,11 +106,4 @@
   margin: 10px auto;
   background-color: rgb(255, 0, 0);
   color: white;
-}
-
-.topic-item {
-  border: 1px solid black;
-  padding: 1em;
-  border-radius: 10px;
-  margin-top: 10px;
 }
