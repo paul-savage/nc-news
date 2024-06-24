@@ -53,7 +53,7 @@ const Topics = () => {
           No topics available
         </Alert>
       ) : (
-        <div className="article-sort-box mx-auto px-2">
+        <div className="article-sort-box mx-auto mb-5 px-2">
           {items.map((item) => {
             return (
               <Card className="mt-3" key={item.slug}>

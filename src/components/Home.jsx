@@ -9,7 +9,7 @@ const Home = () => {
   const { setLoggedIn } = useContext(UserContext);
 
   return (
-    <nav className="nav-spacer">
+    <nav className="nav-spacer mb-5">
       <div className="article-sort-box mx-auto px-2">
         <Card className="mt-3">
           <Card.Body>
