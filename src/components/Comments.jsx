@@ -10,6 +10,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import ListGroup from "react-bootstrap/ListGroup";
 import Alert from "react-bootstrap/Alert";
+import Modal from "react-bootstrap/Modal";
 
 const Comments = ({ article_id, comments, setComments }) => {
   const { user, setUser } = useContext(UserContext);
@@ -18,6 +19,10 @@ const Comments = ({ article_id, comments, setComments }) => {
   const [postDisabled, setPostDisabled] = useState(false);
   const [deleteDisabled, setDeleteDisabled] = useState(false);
   const [error, setError] = useState(null);
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   const handleDescriptionChange = (event) => {
     setPosting(event.target.value);
@@ -27,6 +32,7 @@ const Comments = ({ article_id, comments, setComments }) => {
     setDeleteDisabled(true);
     deleteCommentById(comment_id)
       .then(() => {
+        handleShow();
         setComments(
           comments.filter((comment) => comment.comment_id !== comment_id)
         );
@@ -103,6 +109,7 @@ const Comments = ({ article_id, comments, setComments }) => {
           })}
         </div>
       )}
+
       <Form className="mt-5" onSubmit={handleSubmit}>
         <Form.Label htmlFor="post-text">
           <strong>Post new comment:</strong>
@@ -132,6 +139,18 @@ const Comments = ({ article_id, comments, setComments }) => {
           ) : null}
         </Form.Group>
       </Form>
+
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Post deleted</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>The post has been deleted.</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };
