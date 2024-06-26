@@ -7,6 +7,7 @@ import "./App.css";
 import { Route, Routes } from "react-router-dom";
 
 import Login from "./components/Login";
+import Logout from "./components/Logout";
 import Header from "./components/Header";
 import Home from "./components/Home";
 import Articles from "./components/Articles";
@@ -25,6 +26,7 @@ function App() {
         </header>
         <main>
           <Routes>
+            <Route path="/" element={<Logout />} />
             <Route path="/home" element={<Home />} />
             <Route path="/articles" element={<Articles />} />
             <Route path="/articles/:article_id" element={<SingleArticle />} />
@@ -40,7 +42,8 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path="*" element={<Login />} />
+        <Route path="/" element={<Login />} />
+        <Route path="*" element={<ErrorPage />} />
       </Routes>
     </>
   );
